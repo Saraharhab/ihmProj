@@ -1,0 +1,73 @@
+CREATE TABLE Users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    role VARCHAR(50)
+);
+
+INSERT INTO Users (name, email, role) VALUES ('houda', 'houda@gmail.com', 'Admin');
+INSERT INTO Users (name, email, role) VALUES ('hana', 'hana@gmail.com', 'Utilisateur');
+INSERT INTO Users (name, email, role) VALUES ('sarah', 'sarah@gmail.com', 'Utilisateur');
+INSERT INTO Users (name, email, role) VALUES ('hanane', 'hanane@gmail.com', 'Admin');
+
+
+
+CREATE TABLE Vehicles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    brand VARCHAR(100),
+    model VARCHAR(100),
+    available BOOLEAN
+);
+
+INSERT INTO Vehicles (brand, model, available) VALUES ('Toyota', 'Corolla', true);
+INSERT INTO Vehicles (brand, model, available) VALUES ('Honda', 'Civic', false);
+INSERT INTO Vehicles (brand, model, available) VALUES ('Peugeot', '208', true);
+INSERT INTO Vehicles (brand, model, available) VALUES ('BMW', 'X5', true);
+
+CREATE TABLE Clients (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    phone_number VARCHAR(15)
+);
+
+INSERT INTO Clients (name, email, phone_number) VALUES ('Ali', 'ali@gmail.com', '0123456789');
+INSERT INTO Clients (name, email, phone_number) VALUES ('Zara', 'zara@gmail.com', '0987654321');
+INSERT INTO Clients (name, email, phone_number) VALUES ('Nabil', 'nabil@gmail.com', '0112233445');
+INSERT INTO Clients (name, email, phone_number) VALUES ('Lina', 'lina@gmail.com', '0778899000');
+
+CREATE TABLE Reservations (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    client_id INT,
+    vehicle_id INT,
+    reservation_date DATE,
+    return_date DATE,
+    FOREIGN KEY (client_id) REFERENCES Clients(id),
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicles(id)
+);
+
+INSERT INTO Reservations (client_id, vehicle_id, reservation_date, return_date) 
+VALUES (1, 2, '2024-12-10', '2024-12-15');
+INSERT INTO Reservations (client_id, vehicle_id, reservation_date, return_date) 
+VALUES (3, 4, '2024-12-11', '2024-12-14');
+INSERT INTO Reservations (client_id, vehicle_id, reservation_date, return_date) 
+VALUES (2, 1, '2024-12-12', '2024-12-16');
+
+CREATE TABLE ReservationHistory (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    client_id INT,
+    vehicle_id INT,
+    reservation_date DATE,
+    return_date DATE,
+    status VARCHAR(50),
+    FOREIGN KEY (client_id) REFERENCES Clients(id),
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicles(id)
+);
+
+INSERT INTO ReservationHistory (client_id, vehicle_id, reservation_date, return_date, status) 
+VALUES (1, 2, '2024-12-10', '2024-12-15', 'Retourné');
+INSERT INTO ReservationHistory (client_id, vehicle_id, reservation_date, return_date, status) 
+VALUES (3, 4, '2024-12-11', '2024-12-14', 'En cours');
+INSERT INTO ReservationHistory (client_id, vehicle_id, reservation_date, return_date, status) 
+VALUES (2, 1, '2024-12-12', '2024-12-16', 'Annulée');
+
