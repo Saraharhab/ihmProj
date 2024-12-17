@@ -1,9 +1,13 @@
 package tp;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
 
 public class LoginWindow {
     public static void main(String[] args) {
@@ -11,8 +15,11 @@ public class LoginWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLocationRelativeTo(null);
+        
+        
         JPanel redPanel = new JPanel();
-        redPanel.setBackground(Color.RED);  
+        redPanel.setBackground(Color.RED);
+        
         JPanel whitePanel = new JPanel();
         whitePanel.setBackground(Color.WHITE);
         whitePanel.setLayout(new GridBagLayout());
@@ -26,6 +33,29 @@ public class LoginWindow {
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
+        
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\Administrator\\Desktop\\logo2.png");  
+        JLabel logoLabel = new JLabel(logoIcon);
+        redPanel.add(logoLabel, BorderLayout.WEST);  
+
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+              
+                int width = frame.getWidth();
+                int height = frame.getHeight();
+
+   
+
+                int logoWidth = width / 6;
+                int logoHeight = height / 6;
+                ImageIcon resizedIcon = new ImageIcon(logoIcon.getImage().getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH));
+                logoLabel.setIcon(resizedIcon);
+
+                int fontSize = Math.min(20, Math.max(12, width / 30));
+                redPanel.setFont(new Font("Arial", Font.BOLD, fontSize));
+            }
+        });
 
         JLabel emailLabel = new JLabel("Email:");
         emailLabel.setForeground(Color.RED);

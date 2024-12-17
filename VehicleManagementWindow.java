@@ -4,36 +4,61 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class VehicleManagementWindow {
 
  
-    public static void createVehicleManagementWindow() {
+    public VehicleManagementWindow() {
         JFrame vehicleManagementFrame = new JFrame("Gestion des véhicules");
         vehicleManagementFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         vehicleManagementFrame.setSize(600, 400);
+        vehicleManagementFrame.setLocationRelativeTo(null);
         vehicleManagementFrame.setLayout(new BorderLayout());
  
         JPanel redPanel = new JPanel();
         redPanel.setBackground(Color.RED);
-        redPanel.setLayout(new GridBagLayout());
+        redPanel.setLayout(new BorderLayout());
         JLabel redLabel = new JLabel("Gestion des véhicules:");
         redLabel.setForeground(Color.WHITE);
-        redLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        redPanel.add(redLabel);
+        redLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        redLabel.setHorizontalAlignment(SwingConstants.CENTER); 
+        redPanel.add(redLabel, BorderLayout.CENTER);
+        
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\Administrator\\Desktop\\logo2.png");  
+        JLabel logoLabel = new JLabel(logoIcon);
+        redPanel.add(logoLabel, BorderLayout.NORTH);  
+        
+        vehicleManagementFrame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+              
+                int width = vehicleManagementFrame.getWidth();
+                int height = vehicleManagementFrame.getHeight();
 
- 
+   
+
+                int logoWidth = width / 6;
+                int logoHeight = height / 6;
+                ImageIcon resizedIcon = new ImageIcon(logoIcon.getImage().getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH));
+                logoLabel.setIcon(resizedIcon);
+
+                int fontSize = Math.min(20, Math.max(12, width / 30));
+                redLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
+            }
+        });
+       
         JPanel whitePanel = new JPanel();
         whitePanel.setBackground(Color.WHITE);
         whitePanel.setLayout(new BorderLayout());
 
-  
-        String[] columns = {"Marque", "Modèle", "Année", "Prix (DA)"};
+        String[] columns = {"Marque", "Modèle", "Année", "Prix (DA)","capacite","etat","carburant"};
         String[][] data = {
-            {"Toyota", "Corolla", "2020", "15000"},
-            {"Honda", "Civic", "2019", "14000"},
-            {"Ford", "Focus", "2021", "16000"},
-            {"Tesla", "Model 3", "2022", "35000"},
+            {"Toyota", "Corolla", "2020", "15000","30km","Disponible","essence"},
+            {"Honda", "Civic", "2019", "14000","30km","Disponible","essence"},
+            {"Ford", "Focus", "2021", "16000","30km","Disponible","essence"},
+            {"Tesla", "Model 3", "2022", "35000","30km","Disponible","essence"},
         };
         JTable table = new JTable(data, columns);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -71,6 +96,8 @@ public class VehicleManagementWindow {
                 new MainDashboard();  
             }
         });
+        
+        
 
         buttonPanel.add(addButton);
         buttonPanel.add(backButton);
@@ -86,7 +113,11 @@ public class VehicleManagementWindow {
         vehicleManagementFrame.setVisible(true);
     }
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> createVehicleManagementWindow());
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new VehicleManagementWindow(); 
+            }
+        });
     }
 }
 

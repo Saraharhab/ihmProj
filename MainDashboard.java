@@ -1,110 +1,137 @@
+
 package tp;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentAdapter;
 
 public class MainDashboard {
 
     public MainDashboard() {
-        
+       
         JFrame frame = new JFrame("Tableau de bord - Gestion de Location de Véhicules");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLocationRelativeTo(null); 
 
+   
+        JPanel redPanel = new JPanel();
+        redPanel.setBackground(Color.RED);
         
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        JPanel whitePanel = new JPanel();
+        whitePanel.setBackground(Color.WHITE);
+        whitePanel.setLayout(new GridLayout(3, 2, 10, 10));
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, redPanel, whitePanel);
+        splitPane.setDividerLocation(200);
+        splitPane.setDividerSize(0);
+        
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\Administrator\\Desktop\\logo2.png");  
+        JLabel logoLabel = new JLabel(logoIcon);
+        redPanel.add(logoLabel, BorderLayout.NORTH);  
+        
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+              
+                int width = frame.getWidth();
+                int height = frame.getHeight();
+
+   
+
+                int logoWidth = width / 6;
+                int logoHeight = height / 6;
+                ImageIcon resizedIcon = new ImageIcon(logoIcon.getImage().getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH));
+                logoLabel.setIcon(resizedIcon);
+
+                int fontSize = Math.min(20, Math.max(12, width / 30));
+                redPanel.setFont(new Font("Arial", Font.BOLD, fontSize));
+            }
+        });
 
         
-        JLabel titleLabel = new JLabel("Bienvenue dans le tableau de bord :", JLabel.CENTER);
-        titleLabel.setForeground(Color.RED);
+        JLabel titleLabel = new JLabel("Bienvenue dans le tableau de bord :");
+        titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        panel.add(titleLabel, BorderLayout.NORTH);
+        redPanel.add(titleLabel, BorderLayout.CENTER); 
 
-        
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 2, 10, 10)); 
-
-       
         JButton userManagementButton = new JButton("Gestion des utilisateurs");
-        userManagementButton.setBackground(Color.RED);
-        userManagementButton.setForeground(Color.WHITE);
+        userManagementButton.setBackground(Color.WHITE);
+        userManagementButton.setForeground(Color.RED);
         userManagementButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();  
                 new UserManagementWindow(); 
-                frame.setVisible(false);
             }
         });
 
         JButton vehicleManagementButton = new JButton("Gestion des véhicules");
-        vehicleManagementButton.setBackground(Color.RED);
-        vehicleManagementButton.setForeground(Color.WHITE);
+        vehicleManagementButton.setBackground(Color.WHITE);
+        vehicleManagementButton.setForeground(Color.RED);
         vehicleManagementButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new VehicleManagementWindow(); 
-                frame.setVisible(false); 
+                frame.dispose();
+                new VehicleManagementWindow();  
             }
         });
 
         JButton clientManagementButton = new JButton("Gestion des clients");
-        clientManagementButton.setBackground(Color.RED);
-        clientManagementButton.setForeground(Color.WHITE);
+        clientManagementButton.setBackground(Color.WHITE);
+        clientManagementButton.setForeground(Color.RED);
         clientManagementButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ClientManagementWindow(); 
-                frame.setVisible(false); 
+                frame.dispose();
+                new ClientManagementWindow();
             }
         });
 
         JButton reservationManagementButton = new JButton("Gestion des réservations");
-        reservationManagementButton.setBackground(Color.RED);
-        reservationManagementButton.setForeground(Color.WHITE);
+        reservationManagementButton.setBackground(Color.WHITE);
+        reservationManagementButton.setForeground(Color.RED);
         reservationManagementButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ReservationManagementWindow(); 
-                frame.setVisible(false); 
+                frame.dispose();
+                new ReservationManagementWindow();  
             }
         });
 
         JButton reportingButton = new JButton("Reporting et historique");
-        reportingButton.setBackground(Color.RED);
-        reportingButton.setForeground(Color.WHITE);
+        reportingButton.setBackground(Color.WHITE);
+        reportingButton.setForeground(Color.RED);
         reportingButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 new ReportingHistoryWindow(); 
-                frame.setVisible(false);
             }
         });
 
         JButton logoutButton = new JButton("Se déconnecter");
-        logoutButton.setBackground(Color.RED);
-        logoutButton.setForeground(Color.WHITE);
+        logoutButton.setBackground(Color.WHITE);
+        logoutButton.setForeground(Color.RED);
         logoutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int confirm = JOptionPane.showConfirmDialog(frame, "Voulez-vous vraiment vous déconnecter ?", "Confirmation", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    frame.dispose(); 
+                    frame.dispose();  
                     new LoginWindow().main(null); 
                 }
             }
         });
 
-      
-        buttonPanel.add(userManagementButton);
-        buttonPanel.add(vehicleManagementButton);
-        buttonPanel.add(clientManagementButton);
-        buttonPanel.add(reservationManagementButton);
-        buttonPanel.add(reportingButton);
-        buttonPanel.add(logoutButton);
+        whitePanel.add(userManagementButton);
+        whitePanel.add(vehicleManagementButton);
+        whitePanel.add(clientManagementButton);
+        whitePanel.add(reservationManagementButton);
+        whitePanel.add(reportingButton);
+        whitePanel.add(logoutButton);
 
-
-        panel.add(buttonPanel, BorderLayout.CENTER);
-
-        frame.add(panel);
-        frame.setVisible(true);
+     
+        frame.add(splitPane);
+        frame.setVisible(true); 
     }
 
     public static void main(String[] args) {

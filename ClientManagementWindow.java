@@ -1,32 +1,62 @@
 package tp;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class ClientManagementWindow {
 
      
-    public static void createClientManagementWindow() {
+    public ClientManagementWindow() {
         JFrame clientManagementFrame = new JFrame("Gestion des clients");
         clientManagementFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         clientManagementFrame.setSize(600, 400);
+        clientManagementFrame.setLocationRelativeTo(null);
         clientManagementFrame.setLayout(new BorderLayout());
  
         JPanel redPanel = new JPanel();
         redPanel.setBackground(Color.RED);
-        redPanel.setLayout(new GridBagLayout());
+        redPanel.setLayout(new BorderLayout());
+        
         JLabel redLabel = new JLabel("Gestion des clients");
         redLabel.setForeground(Color.WHITE);
-        redLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        redPanel.add(redLabel);
+        redLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        redLabel.setHorizontalAlignment(SwingConstants.CENTER); 
+        redPanel.add(redLabel, BorderLayout.CENTER);
+        
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\Administrator\\Desktop\\logo2.png");  
+        JLabel logoLabel = new JLabel(logoIcon);
+        redPanel.add(logoLabel, BorderLayout.NORTH);  
+        
+        clientManagementFrame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+              
+                int width = clientManagementFrame.getWidth();
+                int height = clientManagementFrame.getHeight();
+
+   
+
+                int logoWidth = width / 6;
+                int logoHeight = height / 6;
+                ImageIcon resizedIcon = new ImageIcon(logoIcon.getImage().getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH));
+                logoLabel.setIcon(resizedIcon);
+
+                int fontSize = Math.min(20, Math.max(12, width / 30));
+                redLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
+            }
+        });
 
        
         JPanel whitePanel = new JPanel();
         whitePanel.setBackground(Color.WHITE);
         whitePanel.setLayout(new BorderLayout());
+        
 
-      
+
         String[] columns = {"Nom", "Email", "Téléphone", "Adresse"};
         String[][] data = {
             {"Houda", "houda@gmail.com", "0698765432", "ZERALDA"},
@@ -87,6 +117,14 @@ public class ClientManagementWindow {
 
   
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> createClientManagementWindow());
+    	SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new ClientManagementWindow() ; 
+            }
+        });
     }
 }
+
+
+
+
