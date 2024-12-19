@@ -1,15 +1,16 @@
 package tp;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class ReportingHistoryWindow {
+public class ReportingHistoryWindow { 
+	private String role ;
 
-    public ReportingHistoryWindow() {
+    public ReportingHistoryWindow(String role ) {
+    	this.role =role ; 
         JFrame reportingHistoryFrame = new JFrame("Reporting et Historique");
         reportingHistoryFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         reportingHistoryFrame.setSize(600, 400);
@@ -83,10 +84,21 @@ public class ReportingHistoryWindow {
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 reportingHistoryFrame.dispose();
-              
-                new MainDashboard();  
+                switch (role) {
+                case "admin":
+                    new MainDashboard(); 
+                    break;
+                case "gestionnaire":
+                    new MainDashboard1();
+                    break;
+                case "utilisateur":
+                    new MainDashboard2();
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Rôle non reconnu !");
             }
-        });
+        }
+    });
 
         buttonPanel.add(exportButton);
         buttonPanel.add(backButton);
@@ -106,7 +118,7 @@ public class ReportingHistoryWindow {
     public static void main(String[] args) {
     	SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new ReportingHistoryWindow() ; 
+                new ReportingHistoryWindow("admin") ; 
             }
         });
     }

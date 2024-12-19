@@ -1,4 +1,3 @@
-
 package tp;
 
 import javax.swing.*;
@@ -8,9 +7,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentAdapter;
 
-public class MainDashboard {
+public class MainDashboard2 {
 
-    public MainDashboard() {
+    public MainDashboard2() {
        
         JFrame frame = new JFrame("Tableau de bord - Gestion de Location de Véhicules");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,23 +57,14 @@ public class MainDashboard {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         redPanel.add(titleLabel, BorderLayout.CENTER); 
 
-        JButton userManagementButton = new JButton("Gestion des utilisateurs");
-        userManagementButton.setBackground(Color.WHITE);
-        userManagementButton.setForeground(Color.RED);
-        userManagementButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();  
-                new UserManagementWindow("admin"); 
-            }
-        });
-
+        
         JButton vehicleManagementButton = new JButton("Gestion des véhicules");
         vehicleManagementButton.setBackground(Color.WHITE);
         vehicleManagementButton.setForeground(Color.RED);
         vehicleManagementButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                new VehicleManagementWindow("admin");  
+                new VehicleManagementWindow("gestionnaire");  
             }
         });
 
@@ -84,7 +74,7 @@ public class MainDashboard {
         clientManagementButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                new ClientManagementWindow("admin");
+                new ClientManagementWindow("gestionnaire");
             }
         });
 
@@ -94,19 +84,10 @@ public class MainDashboard {
         reservationManagementButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                new ReservationManagementWindow("admin");  
+                new ReservationManagementWindow("gestionnaire");  
             }
         });
 
-        JButton reportingButton = new JButton("Reporting et historique");
-        reportingButton.setBackground(Color.WHITE);
-        reportingButton.setForeground(Color.RED);
-        reportingButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                new ReportingHistoryWindow("admin"); 
-            }
-        });
 
         JButton logoutButton = new JButton("Se déconnecter");
         logoutButton.setBackground(Color.WHITE);
@@ -120,12 +101,9 @@ public class MainDashboard {
                 }
             }
         });
-
-        whitePanel.add(userManagementButton);
         whitePanel.add(vehicleManagementButton);
         whitePanel.add(clientManagementButton);
         whitePanel.add(reservationManagementButton);
-        whitePanel.add(reportingButton);
         whitePanel.add(logoutButton);
 
      
@@ -136,7 +114,7 @@ public class MainDashboard {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new MainDashboard();
+                new MainDashboard2();
             }
         });
     }

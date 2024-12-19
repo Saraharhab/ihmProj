@@ -1,70 +1,20 @@
 package tp;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.sql.*;
-import java.util.Vector;
+
 
 
 public class UserManagementWindow {
+	 private String role;
+    public UserManagementWindow(String role) {
+    	
+    	this.role = role;
 
-    private DefaultTableModel tableModel;  
-    private JTable table;
-
-    private Connection connectToDatabase() {
-        Connection conn = null;
-        try {
-            String url = "jdbc:mysql://localhost:3306/your_database_name";  // Remplace avec ton nom de base
-            String user = "root";  // Ton utilisateur MySQL
-            String password = "";  // Ton mot de passe MySQL (laisse vide si aucun)
-            conn = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erreur de connexion à la base de données");
-        }
-        return conn;
-    }
-
-    private void loadUsersFromDB() {
-        try (Connection conn = connectToDatabase()) {
-            String query = "SELECT name, email, role FROM users";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-
-            tableModel.setRowCount(0); 
-            while (rs.next()) {
-                Vector<String> row = new Vector<>();
-                row.add(rs.getString("name"));
-                row.add(rs.getString("email"));
-                row.add(rs.getString("role"));
-                tableModel.addRow(row);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addUserToDB(String name, String email, String role) {
-        try (Connection conn = connectToDatabase()) {
-            String query = "INSERT INTO users (name, email, role) VALUES (?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, name);
-            stmt.setString(2, email);
-            stmt.setString(3, role);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erreur lors de l'insertion dans la base de données");
-        }
-    }
-
-    public UserManagementWindow() {
-   
         JFrame userManagementFrame = new JFrame("Gestion des utilisateurs");
         userManagementFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         userManagementFrame.setSize(600, 400);
@@ -111,16 +61,13 @@ public class UserManagementWindow {
         
         
         
-        String[] columns = {"Nom", "Email", "Rôle"};
+        String[] columns = {"id_utilisateur", "nom","prenom", "email","role"};
         String[][] data = {
-            {"Houda", "houda@gmail.com", "Admin"},
-            {"Hana", "hana@gmail.com", "Utilisateur"},
-            {"Sarah", "sarah@gmail.com", "Utilisateur"},
-            {"Hanane", "hanane@gmail.com", "Admin"},
+            {"1","Dassa","Houda", "houda@gmail.com", "Admin"},
+            {"2","Karasad","Hana", "hana@gmail.com", "Utilisateur"},
+            {"3","Arhab","Sarah", "sarah@gmail.com", "Utilisateur"},
+            {"4","Hafsaoui","Hassina", "ha@gmail.com", "Admin"},
         };
-        
-     
- 
         
         
         JTable table = new JTable(data, columns);
@@ -135,29 +82,63 @@ public class UserManagementWindow {
         addButton.setForeground(Color.WHITE);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String name = JOptionPane.showInputDialog(userManagementFrame, "Nom de l'utilisateur :");
+            	String id_utilisateur = JOptionPane.showInputDialog(userManagementFrame, "id utilisateur :");
+            	String nom = JOptionPane.showInputDialog(userManagementFrame, "Nom de l'utilisateur :");
+                String prenom = JOptionPane.showInputDialog(userManagementFrame, "Prenom de l'utilisateur :");
                 String email = JOptionPane.showInputDialog(userManagementFrame, "Email de l'utilisateur :");
                 String role = JOptionPane.showInputDialog(userManagementFrame, "Rôle de l'utilisateur :");
 
                 String[][] newData = new String[data.length + 1][3];
                 System.arraycopy(data, 0, newData, 0, data.length);
-                newData[data.length] = new String[]{name, email, role};
+                newData[data.length] = new String[]{id_utilisateur,nom,prenom, email, role};
                 table.setModel(new javax.swing.table.DefaultTableModel(newData, columns));
             }
         });
+        
+        JButton searchButton = new JButton("Rechercher");
+        searchButton.setBackground(Color.RED);
+        searchButton.setForeground(Color.WHITE);
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String searchTerm = JOptionPane.showInputDialog("Entrer un terme de recherche :");
+                for (int i = 0; i < data.length; i++) {
+                    for (int j = 0; j < data[i].length; j++) {
+                        if (data[i][j].toLowerCase().contains(searchTerm.toLowerCase())) {
+                            table.setRowSelectionInterval(i, i);  
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+       
+
 
         JButton backButton = new JButton("Retour au tableau de bord");
         backButton.setBackground(Color.RED);
         backButton.setForeground(Color.WHITE);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	
                 userManagementFrame.dispose(); 
-                new MainDashboard();
+                switch (role) {
+                case "admin":
+                    new MainDashboard();
+                    break;
+                case "gestionnaire":
+                    new MainDashboard2(); 
+                    break;
+                case "utilisateur":
+                    new MainDashboard1(); 
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Rôle non reconnu !");
             }
-        });
-
+        }
+    });
         buttonPanel.add(addButton);
         buttonPanel.add(backButton);
+        buttonPanel.add(searchButton, BorderLayout.NORTH); 
         whitePanel.add(buttonPanel, BorderLayout.SOUTH);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, redPanel, whitePanel);
@@ -168,12 +149,12 @@ public class UserManagementWindow {
         userManagementFrame.add(splitPane, BorderLayout.CENTER);
 
         userManagementFrame.setVisible(true);
-    }
+        }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new UserManagementWindow();  
+                new UserManagementWindow("utilisateur");  
             }
         });
     }
